@@ -1,0 +1,2 @@
+# Reversi
+Prakticum 2
