@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace Reversi
 {
+
     class Program
     {
         static void Main()
@@ -17,34 +18,40 @@ namespace Reversi
 
     class Scherm : Form
     {
-        Panel velden;
+        int xkolommen = 25;
+        int yrijen = 13;
+        
+
         Button nieuwspel, help;
         Label nummerblauw, nummerrood, zet;
-
+        PictureBox velden; 
 
         public Scherm()
         {
+            int x = xkolommen * 50;
+            int y = yrijen * 50;
             this.Text = "Reversi";
-            this.Size = new Size(500, 650);
+            this.Size = new Size(75+x, 250+y);
+            this.MinimumSize = new Size(250, 250+y);
             this.BackColor = System.Drawing.Color.LightBlue;
 
             nieuwspel = new Button();
-            nieuwspel.Location = new Point(160, 10);
+            nieuwspel.Location = new Point(60, 10);
             nieuwspel.Size = new Size(75, 30);
             nieuwspel.Text = "nieuw spel";
             nieuwspel.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(nieuwspel);
 
             help = new Button();
-            help.Location = new Point(240, 10);
+            help.Location = new Point(140, 10);
             help.Size = new Size(50, 30);
             help.Text = "help";
             help.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(help);
 
-            velden = new Panel();
+            velden = new PictureBox();
             velden.Location = new Point(25, 175);
-            velden.Size = new Size(425, 400);
+            velden.Size = new Size(x+1, y+1);
             velden.BackColor = System.Drawing.Color.White;
             this.Controls.Add(velden);
 
@@ -63,10 +70,10 @@ namespace Reversi
             this.Controls.Add(nummerblauw);
 
 
-
+            
             this.Paint += teken;
-
-
+            this.velden.Paint += veldentekener;
+            this.velden.MouseClick += veldenklikker;
 
         }
         private void teken(object o, PaintEventArgs pea)
@@ -76,6 +83,30 @@ namespace Reversi
             blauw = new SolidBrush(System.Drawing.Color.Blue);
             pea.Graphics.FillEllipse(rood, 25, 50, 50, 50);
             pea.Graphics.FillEllipse(blauw, 25, 105, 50, 50);
+
+        }
+
+        private void veldentekener(object o, PaintEventArgs pea)
+        {
+            Pen pen = new Pen(Color.Black);
+            int x = xkolommen * 50;
+            int y = yrijen * 50;
+            int z = 0;
+            int k = 0;
+            while (z <= x)
+            {
+                pea.Graphics.DrawLine(pen, z, 0, z, y);
+                z = z + 50;
+            }
+            while (k <= y)
+            {
+                pea.Graphics.DrawLine(pen, 0, k, x, k);
+                k = k + 50;
+            }
+
+        }
+        private void veldenklikker(object o, MouseEventArgs mea)
+        {
 
         }
     }
