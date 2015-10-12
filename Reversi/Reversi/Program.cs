@@ -18,21 +18,42 @@ namespace Reversi
 
     class Scherm : Form
     {
-        int xkolommen = 25;
-        int yrijen = 13;
+        int xkolommen = 6;
+        int yrijen = 6;
+        int x, y;
         
-
         Button nieuwspel, help;
         Label nummerblauw, nummerrood, zet;
-        PictureBox velden; 
+        PictureBox velden;
+
+        Steen[,] stenen;
 
         public Scherm()
         {
-            int x = xkolommen * 50;
-            int y = yrijen * 50;
+            x = xkolommen * 50;
+            y = yrijen * 50;
+
+            stenen = new Steen[xkolommen, yrijen];
+
+            int centerX = xkolommen / 2;
+            int centerY = yrijen / 2;
+            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
+            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
+            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
+            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
+
+            SetupGUI();
+            
+            this.velden.Paint += veldentekener;
+            this.velden.MouseClick += veldenklikker;
+            this.Paint += teken;
+        }
+
+        private void SetupGUI()
+        {
             this.Text = "Reversi";
-            this.Size = new Size(75+x, 250+y);
-            this.MinimumSize = new Size(250, 250+y);
+            this.Size = new Size(75 + x, 250 + y);
+            this.MinimumSize = new Size(250, 250 + y);
             this.BackColor = System.Drawing.Color.LightBlue;
 
             nieuwspel = new Button();
@@ -51,7 +72,7 @@ namespace Reversi
 
             velden = new PictureBox();
             velden.Location = new Point(25, 175);
-            velden.Size = new Size(x+1, y+1);
+            velden.Size = new Size(x + 1, y + 1);
             velden.BackColor = System.Drawing.Color.White;
             this.Controls.Add(velden);
 
@@ -69,45 +90,40 @@ namespace Reversi
             nummerblauw.Font = new Font("Arial", 12);
             this.Controls.Add(nummerblauw);
 
-
-            
-            this.Paint += teken;
-            this.velden.Paint += veldentekener;
-            this.velden.MouseClick += veldenklikker;
-
         }
+
         private void teken(object o, PaintEventArgs pea)
         {
+            //Stenen in de GUI
             System.Drawing.Brush rood, blauw; 
             rood = new SolidBrush(System.Drawing.Color.Red);
             blauw = new SolidBrush(System.Drawing.Color.Blue);
             pea.Graphics.FillEllipse(rood, 25, 50, 50, 50);
             pea.Graphics.FillEllipse(blauw, 25, 105, 50, 50);
-
         }
 
         private void veldentekener(object o, PaintEventArgs pea)
         {
             Pen pen = new Pen(Color.Black);
-            int x = xkolommen * 50;
-            int y = yrijen * 50;
-            int z = 0;
-            int k = 0;
-            while (z <= x)
-            {
-                pea.Graphics.DrawLine(pen, z, 0, z, y);
-                z = z + 50;
-            }
-            while (k <= y)
-            {
-                pea.Graphics.DrawLine(pen, 0, k, x, k);
-                k = k + 50;
-            }
 
+            for (int z = 0; z <= xkolommen; z++)
+                pea.Graphics.DrawLine(pen, z * 50, 0, z * 50, y);
+
+            for(int k = 0; k <= yrijen; k++)
+                pea.Graphics.DrawLine(pen, 0, k * 50, x, k * 50);
+
+            foreach (Steen s in stenen)
+                if (s != null)
+                    s.Draw(o, pea);
         }
+
         private void veldenklikker(object o, MouseEventArgs mea)
         {
+            //Step 1: Get mouseposition
 
+            //Step 2: Create new Steen at position (if there isn't one already)
+
+            //Step 3: Check around for other stones, and change surrounding stones when necessary.
         }
     }
 }
