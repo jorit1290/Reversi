@@ -44,9 +44,9 @@ namespace Reversi
 
             SetupGUI();
             
-            this.velden.Paint += veldentekener;
-            this.velden.MouseClick += veldenklikker;
-            this.Paint += teken;
+            this.velden.Paint += Veldentekener;
+            this.velden.MouseClick += Veldenklikker;
+            this.Paint += Teken;
         }
 
         private void SetupGUI()
@@ -92,7 +92,7 @@ namespace Reversi
 
         }
 
-        private void teken(object o, PaintEventArgs pea)
+        private void Teken(object o, PaintEventArgs pea)
         {
             //Stenen in de GUI
             System.Drawing.Brush rood, blauw; 
@@ -102,7 +102,7 @@ namespace Reversi
             pea.Graphics.FillEllipse(blauw, 25, 105, 50, 50);
         }
 
-        private void veldentekener(object o, PaintEventArgs pea)
+        private void Veldentekener(object o, PaintEventArgs pea)
         {
             Pen pen = new Pen(Color.Black);
 
@@ -117,9 +117,16 @@ namespace Reversi
                     s.Draw(o, pea);
         }
 
-        private void veldenklikker(object o, MouseEventArgs mea)
+        private void Veldenklikker(object o, MouseEventArgs mea)
         {
             //Step 1: Get mouseposition
+            double xNieuweSteen = mea.X;
+            double yNieuweSteen = mea.Y;
+
+            for (int xkolom = xkolommen * 50; xNieuweSteen < xkolom; xkolom -= 50)
+            {
+                return 
+            };
 
             //Step 2: Create new Steen at position (if there isn't one already)
 
