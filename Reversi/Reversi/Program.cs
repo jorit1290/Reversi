@@ -18,10 +18,11 @@ namespace Reversi
 
     class Scherm : Form
     {
-        int xkolommen = 6;
-        int yrijen = 6;
+        int xkolommen = 7;
+        int yrijen = 7;
         int x, y;
-        
+        int n = 0;
+
         Button nieuwspel, help;
         Label nummerblauw, nummerrood, zet;
         PictureBox velden;
@@ -44,9 +45,10 @@ namespace Reversi
 
             SetupGUI();
             
-            this.velden.Paint += veldentekener;
-            this.velden.MouseClick += veldenklikker;
-            this.Paint += teken;
+            this.velden.Paint += Veldentekener;
+            this.Paint += Teken;
+            this.velden.MouseClick += Veldenklikker;
+            nieuwspel.Click += spelnieuw;
         }
 
         private void SetupGUI()
@@ -62,6 +64,7 @@ namespace Reversi
             nieuwspel.Text = "nieuw spel";
             nieuwspel.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(nieuwspel);
+            
 
             help = new Button();
             help.Location = new Point(140, 10);
@@ -92,7 +95,7 @@ namespace Reversi
 
         }
 
-        private void teken(object o, PaintEventArgs pea)
+        private void Teken(object o, PaintEventArgs pea)
         {
             //Stenen in de GUI
             System.Drawing.Brush rood, blauw; 
@@ -102,7 +105,7 @@ namespace Reversi
             pea.Graphics.FillEllipse(blauw, 25, 105, 50, 50);
         }
 
-        private void veldentekener(object o, PaintEventArgs pea)
+        private void Veldentekener(object o, PaintEventArgs pea)
         {
             Pen pen = new Pen(Color.Black);
 
@@ -117,13 +120,55 @@ namespace Reversi
                     s.Draw(o, pea);
         }
 
-        private void veldenklikker(object o, MouseEventArgs mea)
+        private void Veldenklikker(object o, MouseEventArgs mea)
         {
             //Step 1: Get mouseposition
+            int locatieMuisX = mea.X;
+            int locatieMuisY = mea.Y;
+            int a = 0, b = 0;
+            
+            Point locatieSteen = new Point(a,b);
+
+            for (int positieX = xkolommen; locatieMuisX < xkolommen * 50 && locatieMuisX > 0; positieX -= 1)
+            {
+                locatieMuisX += 50;
+                a = positieX-1;
+            }
+            for (int positieY = yrijen; locatieMuisY < xkolommen * 50 && locatieMuisY > 0; positieY -= 1)
+            {
+                locatieMuisY += 50;
+                b = positieY-1;
+            }
 
             //Step 2: Create new Steen at position (if there isn't one already)
+            if (n%2 == 0)
+            { stenen[a, b] = new Steen(a, b, true);
+                n = n + 1;
+            }
+            else
+            {
+                stenen[a, b] = new Steen(a, b, false);
+                n = n + 1;
+            }
+            velden.Invalidate();
 
             //Step 3: Check around for other stones, and change surrounding stones when necessary.
+
+        }
+
+        private void spelnieuw(object o, EventArgs ea)
+        {
+            n = 0;
+            Array.Clear(stenen, 0, stenen.Length);
+            int centerX = xkolommen / 2;
+            int centerY = yrijen / 2;
+            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
+            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
+            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
+            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
+            velden.Invalidate();
+
+
         }
     }
 }
