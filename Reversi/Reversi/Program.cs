@@ -45,8 +45,8 @@ namespace Reversi
             SetupGUI();
             
             this.velden.Paint += Veldentekener;
-            this.velden.MouseClick += Veldenklikker;
             this.Paint += Teken;
+            this.velden.MouseClick += Veldenklikker;
         }
 
         private void SetupGUI()
@@ -120,18 +120,30 @@ namespace Reversi
         private void Veldenklikker(object o, MouseEventArgs mea)
         {
             //Step 1: Get mouseposition
-            double xNieuweSteen = mea.X;
-            double yNieuweSteen = mea.Y;
+            int locatieMuisX = mea.X;
+            int locatieMuisY = mea.Y;
+            int a = 0, b = 0;
+            Point locatieSteen = new Point(a,b);
 
-            for (int xkolom = xkolommen * 50; xNieuweSteen < xkolom; xkolom -= 50)
+            for (int positieX = xkolommen; locatieMuisX < xkolommen * 50 && locatieMuisX >= 0; positieX -= 1)
             {
-                return 
-            };
+                locatieMuisX -= 50;
+                a = positieX;
+            }
+            for (int positieY = yrijen; locatieMuisY < xkolommen * 50 && locatieMuisY >= 0; positieY -= 1)
+            {
+                locatieMuisY -= 50;
+                b = positieY;
+            }
 
             //Step 2: Create new Steen at position (if there isn't one already)
+            stenen[a, b] = new Steen(a-1, b-1, true);
+            this.Invalidate();
 
             //Step 3: Check around for other stones, and change surrounding stones when necessary.
+
         }
+
     }
 }
 

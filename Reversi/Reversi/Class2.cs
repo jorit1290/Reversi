@@ -12,10 +12,10 @@ namespace Reversi
     {
         Color color;
 
-        int posX, posY;
+        double posX, posY;
         int size = 46;
 
-        public Steen(int posX, int posY, bool red)
+        public Steen(double posX, double posY, bool red)
         {
             this.posX = posX * 50 + 2;
             this.posY = posY * 50 + 2;
@@ -29,7 +29,7 @@ namespace Reversi
         public void Draw(object o, PaintEventArgs pea)
         {
             Brush brush = new SolidBrush(color);
-            pea.Graphics.FillEllipse(brush, posX, posY, size, size);
+            pea.Graphics.FillEllipse(brush, (float)posX, (float)posY, size, size);
         }
     }
 }
