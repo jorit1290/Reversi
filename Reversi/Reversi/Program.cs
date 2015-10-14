@@ -149,44 +149,50 @@ namespace Reversi
             int locatieMuisX = mea.X;
             int locatieMuisY = mea.Y;
             int a = 0, b = 0;
-            
-            Point locatieSteen = new Point(a,b);
+            bool legaal = false;
+
+            Point locatieSteen = new Point(a, b);
 
             for (int positieX = xkolommen; locatieMuisX < xkolommen * grootte && locatieMuisX > 0; positieX -= 1)
             {
                 locatieMuisX += grootte;
-                a = positieX-1;
+                a = positieX - 1;
             }
             for (int positieY = yrijen; locatieMuisY < xkolommen * grootte && locatieMuisY > 0; positieY -= 1)
             {
                 locatieMuisY += grootte;
-                b = positieY-1;
+                b = positieY - 1;
             }
 
             //Step 2: Is this position a legal option?
 
+            if (stenen[a, b] == stenen[0, 0])
+            {
+                legaal = true;
+            }
 
 
             //Step 3: Create new Steen at position (if there isn't one already)
-            if (beurt%2 == 0)
+            if (legaal == true)
             {
-                stenen[a, b] = new Steen(a, b, true);
-                beurt = beurt + 1;
-            }
-            else
-            {
-                stenen[a, b] = new Steen(a, b, false);
-                beurt = beurt + 1;
-            }
+                if (beurt % 2 == 0)
+                {
+                    stenen[a, b] = new Steen(a, b, true);
+                    beurt = beurt + 1;
+                }
+                else
+                {
+                    stenen[a, b] = new Steen(a, b, false);
+                    beurt = beurt + 1;
+                }
 
-            zet.Text = Uitkomst();
-            velden.Invalidate();
-            
-
+                zet.Text = Uitkomst();
+                legaal = false;
+                velden.Invalidate();
+            }
             //Step 4: Check around for other stones, and change surrounding stones when necessary.
 
         }
-
 
         //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
         //Hij zorgt ervoor dat je weer het beginscherm krijgt en opnieuw kunt beginnen.
@@ -205,7 +211,7 @@ namespace Reversi
         {
             if (beurt % 2 == 0)
                 return "rood aan zet";
-            else if (beurt % 2 != 0)
+            else if (beurt % 2 == 1)
                 return "blauw aan zet";
            // else if (?)
              //   return "rood heeft gewonnen!";
