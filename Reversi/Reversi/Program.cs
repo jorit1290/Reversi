@@ -21,7 +21,6 @@ namespace Reversi
         int xkolommen = 6;
         int yrijen = 6;
         int beurt = 0;
-        int size = 46;
         int grootte = 50;
         int x, y;
         Button nieuwspel, help;
@@ -38,13 +37,7 @@ namespace Reversi
 
             stenen = new Steen[xkolommen, yrijen];
 
-            int centerX = xkolommen / 2;
-            int centerY = yrijen / 2;
-            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
-            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
-            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
-            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
-
+            BeginStand();
             SetupGUI();
             
             this.velden.Paint += Veldentekener;
@@ -54,19 +47,33 @@ namespace Reversi
             //help.Click += Legaal;
         }
 
+        
+        //BeginStand tekent de vier stenen die al op het bord liggen aan het begin van het spel.
+        private void BeginStand()
+        {
+            int centerX = xkolommen / 2;
+            int centerY = yrijen / 2;
+            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
+            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
+            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
+            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
+        }
+
+
+        //De onderstaande methode maakt de GUI
         private void SetupGUI()
         {
             this.Text = "Reversi";
             this.Size = new Size(75 + x, 250 + y);
             this.MinimumSize = new Size(250, 250 + y);
-            this.BackColor = System.Drawing.Color.LightBlue;
-
+            this.BackColor = System.Drawing.Color.FromArgb(215,245,255);
+            
             nieuwspel = new Button();
             nieuwspel.Location = new Point(70, 20);
             nieuwspel.Size = new Size(90, 30);
             nieuwspel.Text = "nieuw spel";
             nieuwspel.Font = new Font("Ariel", 10);
-            nieuwspel.BackColor = System.Drawing.Color.LightGray;
+            nieuwspel.BackColor = System.Drawing.Color.FromArgb(240,240,240);
             this.Controls.Add(nieuwspel);
 
             help = new Button();
@@ -74,7 +81,7 @@ namespace Reversi
             help.Size = new Size(60, 30);
             help.Text = "help";
             help.Font = new Font("Ariel", 10);
-            help.BackColor = System.Drawing.Color.LightGray;
+            help.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
             this.Controls.Add(help);
 
             velden = new PictureBox();
@@ -180,19 +187,20 @@ namespace Reversi
 
         }
 
+
+        //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
+        //Hij zorgt ervoor dat je weer het beginscherm krijgt en opnieuw kunt beginnen.
         private void Spelnieuw(object o, EventArgs ea)
         {
             beurt = 0;
             Array.Clear(stenen, 0, stenen.Length);
-            int centerX = xkolommen / 2;
-            int centerY = yrijen / 2;
-            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
-            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
-            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
-            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
+            BeginStand();
+            zet.Text = Uitkomst();
             velden.Invalidate();
         }
 
+
+        //De methode Uitkomst bepaald welke tekst het label zet laat zien.
         private string Uitkomst()
         {
             if (beurt % 2 == 0)
