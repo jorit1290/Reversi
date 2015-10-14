@@ -17,18 +17,20 @@ namespace Reversi
 
     class Scherm : Form
     {
+        //Belangrijke variabelen
         int xkolommen = 6;
         int yrijen = 6;
         int beurt = 0;
         int grootte = 50;
         int x, y;
+        
         Button nieuwspel, help;
-
-        Label nummerblauw, nummerrood, zet;
+        Label aantalblauw, aantalgroen, zet;
         PictureBox velden;
-
         Steen[,] stenen;
 
+
+        //In de constructormethode worden methodes aangeroepen die de GUI maken en zorgen dat het spel werkt.
         public Scherm()
         {
             x = xkolommen * grootte;
@@ -36,37 +38,25 @@ namespace Reversi
 
             stenen = new Steen[xkolommen, yrijen];
 
-            BeginStand();
             SetupGUI();
             
             this.velden.Paint += Veldentekener;
-            this.Paint += Teken;
+            this.Paint += Legenda;
             this.velden.MouseClick += Veldenklikker;
             nieuwspel.Click += Spelnieuw;
             //help.Click += Legaal;
         }
 
         
-        //BeginStand tekent de vier stenen die al op het bord liggen aan het begin van het spel.
-        private void BeginStand()
-        {
-            int centerX = xkolommen / 2;
-            int centerY = yrijen / 2;
-            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
-            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
-            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
-            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
-        }
-
-
         //De onderstaande methode maakt de GUI
         private void SetupGUI()
         {
             this.Text = "Reversi";
             this.Size = new Size(75 + x, 250 + y);
             this.MinimumSize = new Size(250, 250 + y);
-            this.BackColor = System.Drawing.Color.FromArgb(215,245,255);
-            
+            this.BackColor = System.Drawing.Color.FromArgb(246,255,248);
+
+            //Buttons nieuwspel en help
             nieuwspel = new Button();
             nieuwspel.Location = new Point(70, 20);
             nieuwspel.Size = new Size(90, 30);
@@ -83,27 +73,20 @@ namespace Reversi
             help.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
             this.Controls.Add(help);
 
-            velden = new PictureBox();
-            velden.Location = new Point(25, 175);
-            velden.Size = new Size(x + 1, y + 1);
-            velden.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(velden);
+            //Labels aantalgroen, aantalblauw en zet
+            aantalgroen = new Label();
+            aantalgroen.Size = new Size(70, 30);
+            aantalgroen.Location = new Point(85, 85);
+            aantalgroen.Text = Aantalgroen();
+            aantalgroen.Font = new Font("Arial", 11);
+            this.Controls.Add(aantalgroen);
 
-            //nu staat er nog x en y, dat moet nog aangepast worden.
-
-            nummerrood = new Label();
-            nummerrood.Size = new Size(70, 30);
-            nummerrood.Location = new Point(85, 85);
-            nummerrood.Text = "X stenen";
-            nummerrood.Font = new Font("Arial", 11);
-            this.Controls.Add(nummerrood);
-
-            nummerblauw = new Label();
-            nummerblauw.Size = new Size(70, 30);
-            nummerblauw.Location = new Point(85, 130);
-            nummerblauw.Text = "Y stenen";
-            nummerblauw.Font = new Font("Arial", 11);
-            this.Controls.Add(nummerblauw);
+            aantalblauw = new Label();
+            aantalblauw.Size = new Size(70, 30);
+            aantalblauw.Location = new Point(85, 130);
+            aantalblauw.Text = Aantalblauw();
+            aantalblauw.Font = new Font("Arial", 11);
+            this.Controls.Add(aantalblauw);
 
             zet = new Label();
             zet.Size = new Size(100, 30);
@@ -111,22 +94,47 @@ namespace Reversi
             zet.Text = Uitkomst();
             zet.Font = new Font("Ariel", 11);
             this.Controls.Add(zet);
+
+            //Picturebox velden
+            velden = new PictureBox();
+            velden.Location = new Point(25, 175);
+            velden.Size = new Size(x + 1, y + 1);
+            velden.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(velden);
+
+
+            BeginStand();
         }
 
-        private void Teken(object o, PaintEventArgs pea)
-        {
-            //Stenen in de GUI
-            int diameter = 30;
-            Brush rood, blauw;
 
-            rood = new SolidBrush(System.Drawing.Color.Red);
-            blauw = new SolidBrush(System.Drawing.Color.Blue);
-            pea.Graphics.FillEllipse(rood, 25, 75, diameter, diameter);
+        //BeginStand tekent de vier stenen die al op het bord liggen aan het begin van het spel.
+        private void BeginStand()
+        {
+            int centerX = xkolommen / 2;
+            int centerY = yrijen / 2;
+            stenen[centerX - 1, centerY - 1] = new Steen(centerX - 1, centerY - 1, true);
+            stenen[centerX, centerY] = new Steen(centerX, centerY, true);
+            stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
+            stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
+        }
+
+
+        //De methode Legenda tekent de rode en blauwe steen die in de GUI staan.
+        private void Legenda(object o, PaintEventArgs pea)
+        {
+            int diameter = 30;
+            Brush groen, blauw;
+
+            groen = new SolidBrush(System.Drawing.Color.FromArgb(178, 255, 102));
+            blauw = new SolidBrush(System.Drawing.Color.FromArgb(153,255,255));
+            pea.Graphics.FillEllipse(groen, 25, 75, diameter, diameter);
             pea.Graphics.DrawEllipse(Pens.Black, 25, 75, diameter, diameter);
             pea.Graphics.FillEllipse(blauw, 25, 120, diameter, diameter);
             pea.Graphics.DrawEllipse(Pens.Black, 25, 120, diameter, diameter);
         }
 
+
+        //Als de onderstaande methode wordt aangeroepen, worden de lijnen van het veld getekend.
         private void Veldentekener(object o, PaintEventArgs pea)
         {
             Pen pen = new Pen(Color.Black);
@@ -142,9 +150,11 @@ namespace Reversi
                     s.DrawSteen(o, pea);
         }
 
+
+        // Als er op de Picturebox geklikt wordt, wordt Veldenklikker aangeroepen. Deze methode kijkt of het legaal
+        // is om op de desbetreffende plek een steen te plaatsen. Zo ja, dan wordt er een steen getekend.
         private void Veldenklikker(object o, MouseEventArgs mea)
         {
-            //Step 1: Get mouseposition
             int locatieMuisX = mea.X;
             int locatieMuisY = mea.Y;
             int a = 0, b = 0;
@@ -152,6 +162,7 @@ namespace Reversi
 
             Point locatieSteen = new Point(a, b);
 
+            //Stap 1: Transleer de muispositie naar de positie in de array stenen.
             for (int positieX = xkolommen; locatieMuisX < xkolommen * grootte && locatieMuisX > 0; positieX -= 1)
             {
                 locatieMuisX += grootte;
@@ -162,16 +173,18 @@ namespace Reversi
                 locatieMuisY += grootte;
                 b = positieY - 1;
             }
-
-            //Step 2: Is this position a legal option?
-
+       
+            //Stap 2: Ligt er al een steen op de desbetreffende positie?
             if (stenen[a, b] == stenen[0, 0])
             {
                 legaal = true;
             }
 
+            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
+            
 
-            //Step 3: Create new Steen at position (if there isn't one already)
+
+            //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
             if (legaal == true)
             {
                 if (beurt % 2 == 0)
@@ -184,12 +197,15 @@ namespace Reversi
                     stenen[a, b] = new Steen(a, b, false);
                     beurt = beurt + 1;
                 }
-
-                zet.Text = Uitkomst();
+                
                 legaal = false;
                 velden.Invalidate();
+                zet.Text = Uitkomst();
+                aantalgroen.Text = Aantalgroen();
+                aantalblauw.Text = Aantalblauw();
             }
-            //Step 4: Check around for other stones, and change surrounding stones when necessary.
+
+            //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
 
         }
 
@@ -209,32 +225,57 @@ namespace Reversi
         private string Uitkomst()
         {
             if (beurt % 2 == 0)
-                return "rood aan zet";
+                return "groen aan zet";
             else if (beurt % 2 == 1)
                 return "blauw aan zet";
-           // else if (?)
-             //   return "rood heeft gewonnen!";
-           // else if (?)
-             //   return "blauw heeft gewonen!";
+            // else if (geen zetten meer mogelijk && Aantalgroen>Aantalblauw)
+            //   return "groen heeft gewonnen!";
+            // else if (geen zetten meer mogelijk && Aantalblauw>Aantalgroen)
+            //   return "blauw heeft gewonen!";
             else
-                return "remise";
+                return "Gelijkspel";
         }
 
-        /*
+        //Aantalgroenbepaalt hoeveel groene stenen er op het bord staan.
+        private string Aantalgroen()
+        {
+            if (beurt == 0)
+                return "2 stenen";
+
+            else
+            {
+                int aantal = (beurt + 1) / 2 + 2;
+                return aantal + " stenen";
+            }
+        }
+
+
+        //Aantalblauw bepaalt hoeveel blauwe stenen er op het bord staan.
+        private string Aantalblauw()
+        {
+            if (beurt == 0)
+                return "2 stenen";
+            else
+            {
+                int aantal = beurt / 2 + 2;
+                return aantal + " stenen";
+            }
+        }
+
+
         //klopt helemaal niets van, waarden achter return hebben ook geen betekenis, gewoon random iets neergezet
-        private int Legaal()
+        /*private void Legaal()
         {
             foreach (Steen s in stenen)
             {
                 if (beurt % 2 == 0 && s == null)
-                    return 0;
-                else if (beurt % 2 != 0 && s == null)
-                    return 1;
-                else
-                    return 2;
+                {
+                    double xPos = 2;
+                    double yPos = 2; 
+                    Steen.LegeSteen(xPos, yPos);
+                }
             }
-        }
-        */
+        } */
     }
 }
 
