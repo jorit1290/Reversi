@@ -18,10 +18,12 @@ namespace Reversi
 
     class Scherm : Form
     {
-        int xkolommen = 7;
-        int yrijen = 7;
+        int xkolommen = 6;
+        int yrijen = 6;
         int x, y;
-        int n = 0;
+        int beurt = 0;
+        int size = 46;
+        int grootte = 50;
 
         Button nieuwspel, help;
         Label nummerblauw, nummerrood, zet;
@@ -31,8 +33,8 @@ namespace Reversi
 
         public Scherm()
         {
-            x = xkolommen * 50;
-            y = yrijen * 50;
+            x = xkolommen * grootte;
+            y = yrijen * grootte;
 
             stenen = new Steen[xkolommen, yrijen];
 
@@ -48,7 +50,8 @@ namespace Reversi
             this.velden.Paint += Veldentekener;
             this.Paint += Teken;
             this.velden.MouseClick += Veldenklikker;
-            nieuwspel.Click += spelnieuw;
+            nieuwspel.Click += Spelnieuw;
+            //help.Click += Legaal;
         }
 
         private void SetupGUI()
@@ -64,7 +67,6 @@ namespace Reversi
             nieuwspel.Text = "nieuw spel";
             nieuwspel.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(nieuwspel);
-            
 
             help = new Button();
             help.Location = new Point(140, 10);
@@ -92,7 +94,6 @@ namespace Reversi
             nummerblauw.Text = "Y stenen";
             nummerblauw.Font = new Font("Arial", 12);
             this.Controls.Add(nummerblauw);
-
         }
 
         private void Teken(object o, PaintEventArgs pea)
@@ -101,8 +102,8 @@ namespace Reversi
             System.Drawing.Brush rood, blauw; 
             rood = new SolidBrush(System.Drawing.Color.Red);
             blauw = new SolidBrush(System.Drawing.Color.Blue);
-            pea.Graphics.FillEllipse(rood, 25, 50, 50, 50);
-            pea.Graphics.FillEllipse(blauw, 25, 105, 50, 50);
+            pea.Graphics.FillEllipse(rood, 25, 50, size, size);
+            pea.Graphics.FillEllipse(blauw, 25, 105, size, size);
         }
 
         private void Veldentekener(object o, PaintEventArgs pea)
@@ -110,14 +111,14 @@ namespace Reversi
             Pen pen = new Pen(Color.Black);
 
             for (int z = 0; z <= xkolommen; z++)
-                pea.Graphics.DrawLine(pen, z * 50, 0, z * 50, y);
+                pea.Graphics.DrawLine(pen, z * grootte, 0, z * grootte, y);
 
             for(int k = 0; k <= yrijen; k++)
-                pea.Graphics.DrawLine(pen, 0, k * 50, x, k * 50);
+                pea.Graphics.DrawLine(pen, 0, k * grootte, x, k * grootte);
 
             foreach (Steen s in stenen)
                 if (s != null)
-                    s.Draw(o, pea);
+                    s.DrawSteen(o, pea);
         }
 
         private void Veldenklikker(object o, MouseEventArgs mea)
@@ -129,36 +130,41 @@ namespace Reversi
             
             Point locatieSteen = new Point(a,b);
 
-            for (int positieX = xkolommen; locatieMuisX < xkolommen * 50 && locatieMuisX > 0; positieX -= 1)
+            for (int positieX = xkolommen; locatieMuisX < xkolommen * grootte && locatieMuisX > 0; positieX -= 1)
             {
-                locatieMuisX += 50;
+                locatieMuisX += grootte;
                 a = positieX-1;
             }
-            for (int positieY = yrijen; locatieMuisY < xkolommen * 50 && locatieMuisY > 0; positieY -= 1)
+            for (int positieY = yrijen; locatieMuisY < xkolommen * grootte && locatieMuisY > 0; positieY -= 1)
             {
-                locatieMuisY += 50;
+                locatieMuisY += grootte;
                 b = positieY-1;
             }
 
-            //Step 2: Create new Steen at position (if there isn't one already)
-            if (n%2 == 0)
-            { stenen[a, b] = new Steen(a, b, true);
-                n = n + 1;
+            //Step 2: Is this position a legal option?
+
+
+
+            //Step 3: Create new Steen at position (if there isn't one already)
+            if (beurt%2 == 0)
+            {
+                stenen[a, b] = new Steen(a, b, true);
+                beurt = beurt + 1;
             }
             else
             {
                 stenen[a, b] = new Steen(a, b, false);
-                n = n + 1;
+                beurt = beurt + 1;
             }
             velden.Invalidate();
 
-            //Step 3: Check around for other stones, and change surrounding stones when necessary.
+            //Step 4: Check around for other stones, and change surrounding stones when necessary.
 
         }
 
-        private void spelnieuw(object o, EventArgs ea)
+        private void Spelnieuw(object o, EventArgs ea)
         {
-            n = 0;
+            beurt = 0;
             Array.Clear(stenen, 0, stenen.Length);
             int centerX = xkolommen / 2;
             int centerY = yrijen / 2;
@@ -167,8 +173,20 @@ namespace Reversi
             stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
             stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
             velden.Invalidate();
+        }
 
-
+        //klopt helemaal niets van, waarden achter return hebben ook geen betekenis, gewoon random iets neergezet
+        private int Legaal()
+        {
+            foreach (Steen s in stenen)
+            {
+                if (beurt % 2 == 0 && s == null)
+                    return 0;
+                else if (beurt % 2 != 0 && s == null)
+                    return 1;
+                else
+                    return 2;
+            }
         }
     }
 }
