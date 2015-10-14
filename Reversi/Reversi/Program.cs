@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace Reversi
 {
+    ehm
 
     class Program
     {
@@ -204,7 +205,7 @@ namespace Reversi
             zet.Text = Uitkomst();
             velden.Invalidate();
         }
-
+        
 
         //De methode Uitkomst bepaald welke tekst het label zet laat zien.
         private string Uitkomst()
