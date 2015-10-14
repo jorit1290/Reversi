@@ -7,8 +7,6 @@ using System.Drawing;
 
 namespace Reversi
 {
-    ehm
-
     class Program
     {
         static void Main()
