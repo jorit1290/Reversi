@@ -24,10 +24,12 @@ namespace Reversi
         int beurt = 0;
         int size = 46;
         int grootte = 50;
+        bool dinges = false;
 
         Button nieuwspel, help;
         Label nummerblauw, nummerrood, zet;
         PictureBox velden;
+        
 
         Steen[,] stenen;
 
@@ -146,18 +148,20 @@ namespace Reversi
 
 
             //Step 3: Create new Steen at position (if there isn't one already)
-            if (beurt%2 == 0)
+            if(dinges == true)
             {
-                stenen[a, b] = new Steen(a, b, true);
-                beurt = beurt + 1;
+                if (beurt % 2 == 0)
+                {
+                    stenen[a, b] = new Steen(a, b, true);
+                    beurt = beurt + 1;
+                }
+                else
+                {
+                    stenen[a, b] = new Steen(a, b, false);
+                    beurt = beurt + 1;
+                }
+                velden.Invalidate();
             }
-            else
-            {
-                stenen[a, b] = new Steen(a, b, false);
-                beurt = beurt + 1;
-            }
-            velden.Invalidate();
-
             //Step 4: Check around for other stones, and change surrounding stones when necessary.
 
         }
@@ -175,8 +179,10 @@ namespace Reversi
             velden.Invalidate();
         }
 
+
+
         //klopt helemaal niets van, waarden achter return hebben ook geen betekenis, gewoon random iets neergezet
-        private int Legaal()
+        /*private int Legaal()
         {
             foreach (Steen s in stenen)
             {
@@ -187,7 +193,7 @@ namespace Reversi
                 else
                     return 2;
             }
-        }
+        }*/
     }
 }
 
