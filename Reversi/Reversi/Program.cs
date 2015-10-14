@@ -20,12 +20,12 @@ namespace Reversi
     {
         int xkolommen = 6;
         int yrijen = 6;
-        int x, y;
         int beurt = 0;
         int size = 46;
         int grootte = 50;
-
+        int x, y;
         Button nieuwspel, help;
+
         Label nummerblauw, nummerrood, zet;
         PictureBox velden;
 
@@ -62,16 +62,18 @@ namespace Reversi
             this.BackColor = System.Drawing.Color.LightBlue;
 
             nieuwspel = new Button();
-            nieuwspel.Location = new Point(60, 10);
-            nieuwspel.Size = new Size(75, 30);
+            nieuwspel.Location = new Point(70, 20);
+            nieuwspel.Size = new Size(90, 30);
             nieuwspel.Text = "nieuw spel";
+            nieuwspel.Font = new Font("Ariel", 10);
             nieuwspel.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(nieuwspel);
 
             help = new Button();
-            help.Location = new Point(140, 10);
-            help.Size = new Size(50, 30);
+            help.Location = new Point(200, 20);
+            help.Size = new Size(60, 30);
             help.Text = "help";
+            help.Font = new Font("Ariel", 10);
             help.BackColor = System.Drawing.Color.LightGray;
             this.Controls.Add(help);
 
@@ -84,26 +86,39 @@ namespace Reversi
             //nu staat er nog x en y, dat moet nog aangepast worden.
 
             nummerrood = new Label();
-            nummerrood.Location = new Point(100, 65);
+            nummerrood.Size = new Size(70, 30);
+            nummerrood.Location = new Point(85, 85);
             nummerrood.Text = "X stenen";
-            nummerrood.Font = new Font("Arial", 12);
+            nummerrood.Font = new Font("Arial", 11);
             this.Controls.Add(nummerrood);
 
             nummerblauw = new Label();
-            nummerblauw.Location = new Point(100, 120);
+            nummerblauw.Size = new Size(70, 30);
+            nummerblauw.Location = new Point(85, 130);
             nummerblauw.Text = "Y stenen";
-            nummerblauw.Font = new Font("Arial", 12);
+            nummerblauw.Font = new Font("Arial", 11);
             this.Controls.Add(nummerblauw);
+
+            zet = new Label();
+            zet.Size = new Size(100, 30);
+            zet.Location = new Point(200, 110);
+            zet.Text = Uitkomst();
+            zet.Font = new Font("Ariel", 11);
+            this.Controls.Add(zet);
         }
 
         private void Teken(object o, PaintEventArgs pea)
         {
             //Stenen in de GUI
-            System.Drawing.Brush rood, blauw; 
+            int diameter = 30;
+            Brush rood, blauw;
+
             rood = new SolidBrush(System.Drawing.Color.Red);
             blauw = new SolidBrush(System.Drawing.Color.Blue);
-            pea.Graphics.FillEllipse(rood, 25, 50, size, size);
-            pea.Graphics.FillEllipse(blauw, 25, 105, size, size);
+            pea.Graphics.FillEllipse(rood, 25, 75, diameter, diameter);
+            pea.Graphics.DrawEllipse(Pens.Black, 25, 75, diameter, diameter);
+            pea.Graphics.FillEllipse(blauw, 25, 120, diameter, diameter);
+            pea.Graphics.DrawEllipse(Pens.Black, 25, 120, diameter, diameter);
         }
 
         private void Veldentekener(object o, PaintEventArgs pea)
@@ -156,7 +171,10 @@ namespace Reversi
                 stenen[a, b] = new Steen(a, b, false);
                 beurt = beurt + 1;
             }
+
+            zet.Text = Uitkomst();
             velden.Invalidate();
+            
 
             //Step 4: Check around for other stones, and change surrounding stones when necessary.
 
@@ -175,6 +193,21 @@ namespace Reversi
             velden.Invalidate();
         }
 
+        private string Uitkomst()
+        {
+            if (beurt % 2 == 0)
+                return "rood aan zet";
+            else if (beurt % 2 != 0)
+                return "blauw aan zet";
+           // else if (?)
+             //   return "rood heeft gewonnen!";
+           // else if (?)
+             //   return "blauw heeft gewonen!";
+            else
+                return "remise";
+        }
+
+        /*
         //klopt helemaal niets van, waarden achter return hebben ook geen betekenis, gewoon random iets neergezet
         private int Legaal()
         {
@@ -188,6 +221,7 @@ namespace Reversi
                     return 2;
             }
         }
+        */
     }
 }
 

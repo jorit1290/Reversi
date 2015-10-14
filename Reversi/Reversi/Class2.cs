@@ -31,6 +31,7 @@ namespace Reversi
         {
             Brush brush = new SolidBrush(color);
             pea.Graphics.FillEllipse(brush, (float)posX, (float)posY, size, size);
+            pea.Graphics.DrawEllipse(Pens.Black,(float)posX, (float)posY, size, size);
         }
 
         public void LegeSteen(double xPos, double yPos, bool red)
