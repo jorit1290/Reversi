@@ -116,7 +116,7 @@ namespace Reversi
             stenen[centerX - 1, centerY] = new Steen(centerX - 1, centerY, false);
             stenen[centerX, centerY - 1] = new Steen(centerX, centerY - 1, false);
         }
-
+   
 
         //De methode Legenda tekent de rode en blauwe steen die in de GUI staan.
         private void Legenda(object o, PaintEventArgs pea)
@@ -174,13 +174,13 @@ namespace Reversi
             }
        
             //Stap 2: Ligt er al een steen op de desbetreffende positie?
-
-            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
-
             if(stenen[a,b] == null)
             {
                 legaal = true;
             }
+
+            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
+
 
 
             //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
@@ -188,25 +188,25 @@ namespace Reversi
             {
 
                 if (beurt % 2 == 0)
-                    {
-                        stenen[a, b] = new Steen(a, b, true);
-                        beurt = beurt + 1;
-                    }
-                    else
-                    {
-                        stenen[a, b] = new Steen(a, b, false);
-                        beurt = beurt + 1;
-                    }
+                {
+                    stenen[a, b] = new Steen(a, b, true);
+                    beurt = beurt + 1;
+                }
+                else
+                {
+                    stenen[a, b] = new Steen(a, b, false);
+                    beurt = beurt + 1;
+                }
 
-             legaal = false;
-             velden.Invalidate();
-             zet.Text = Uitkomst();
-             aantalgroen.Text = Aantalgroen() + " stenen";
-             aantalblauw.Text = Aantalblauw() + " stenen";
-                
+                legaal = false;
+                velden.Invalidate();
+                zet.Text = Uitkomst();
+                aantalgroen.Text = Aantalgroen() + " stenen";
+                aantalblauw.Text = Aantalblauw() + " stenen";
+            }    
 
-                //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
-            }
+            //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
+        
         }
 
         //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
@@ -237,7 +237,7 @@ namespace Reversi
                 return "Gelijkspel";
         }
 
-        //Aantalgroenbepaalt hoeveel groene stenen er op het bord staan.
+        //Aantalgroen bepaalt hoeveel groene stenen er op het bord staan.
         private string Aantalgroen()
         {
             int aantalgr = 0;
