@@ -191,6 +191,9 @@ namespace Reversi
             }
             //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
 
+            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
+
+
 
             //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
             if (legaal == true)
@@ -212,10 +215,10 @@ namespace Reversi
                 zet.Text = Uitkomst();
                 aantalgroen.Text = Aantalgroen() + " stenen";
                 aantalblauw.Text = Aantalblauw() + " stenen";
-
+            }    
 
                 //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
-            }
+
         }
 
         //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
@@ -246,7 +249,7 @@ namespace Reversi
                 return "Gelijkspel";
         }
 
-        //Aantalgroenbepaalt hoeveel groene stenen er op het bord staan.
+        //Aantalgroen bepaalt hoeveel groene stenen er op het bord staan.
         private string Aantalgroen()
         {
             int aantalgr = 0;
