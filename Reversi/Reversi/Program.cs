@@ -136,7 +136,7 @@ namespace Reversi
         }
 
 
-        //Als de onderstaande methode wordt aangeroepen, worden de lijnen van het veld getekend.
+        //Als de onderstaande methode wordt aangeroepen, worden de lijnen van het veld getekend en de stenen waaraan al een waarde is toegekend.
         private void Veldentekener(object o, PaintEventArgs pea)
         {
             Pen pen = new Pen(Color.Black);
@@ -152,13 +152,14 @@ namespace Reversi
                     s.DrawSteen(o, pea);
 
             //Deze dubbele for-loop regelt de helpfunctie. Wanneer op de help-knop geklikt wordt, wordt de methode Helper aangeroepen.
-            //Die verandert de waarde van .... in false, zodat de hulpcirkels getekend worden.
+            //Die verandert de waarde van hulp in true, zodat de hulpcirkels getekend worden. Als je dan nog een keer op de help-knop klikt,
+            //verandert de waarde weer in false. De hulpcirkels verdwijnen dan.
             for (int x = 0; x < xkolommen; x++)
             {
                 for (int y = 0; y < yrijen; y++)
                 {
-                    if (hulp && stenen[x, y] == null && insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
-        }
+                    if (hulp && stenen[x, y] == null && Insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
+                 }
             }
         }
 
@@ -213,7 +214,7 @@ namespace Reversi
              aantalblauw.Text = Aantalblauw() + " stenen";
             }    
 
-            //Stap 4: Verander omliggende stenen van kleur, als dat nodig is.
+            //Stap 4: Verander omliggende stenen van kleur.
         
         }
 
@@ -330,8 +331,10 @@ namespace Reversi
             richtingY[2] = 1;
 
             return new Tuple<int[], int[]>(richtingX, richtingY);
-            }
+        }
 
+
+        //Deze methode verandert de waarde van hulp, zodat de helpfunctie in veldentekener juist wel of juist niet gaat werken.
         public void Helper(object o, EventArgs ea)
         {
             hulp = !hulp;
