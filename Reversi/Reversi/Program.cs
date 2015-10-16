@@ -150,12 +150,14 @@ namespace Reversi
                 if (s != null)
                     s.DrawSteen(o, pea);
 
+            //Deze dubbele for-loop regelt de helpfunctie. Wanneer op de help-knop geklikt wordt, wordt de methode Helper aangeroepen.
+            //Die verandert de waarde van .... in false, zodat de hulpcirkels getekend worden.
             for (int x = 0; x < xkolommen; x++)
             {
                 for (int y = 0; y < yrijen; y++)
                 {
                     if (stenen[x, y] == null && insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
-        }
+                }
             }
         }
 
