@@ -156,7 +156,7 @@ namespace Reversi
             {
                 for (int y = 0; y < yrijen; y++)
                 {
-                    if (stenen[x, y] == null && insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
+                    if (stenen[x, y] == null && Insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
                 }
             }
         }
@@ -170,7 +170,6 @@ namespace Reversi
             int locatieMuisY = mea.Y;
             int a = 0, b = 0;
             
-
             Point locatieSteen = new Point(a, b);
 
             //Stap 1: Transleer de muispositie naar de positie in de array stenen.
@@ -186,10 +185,11 @@ namespace Reversi
             }
        
             //Stap 2: Ligt er al een steen op de desbetreffende positie?
-            if (stenen[a, b] == null && insluit(a, b) == true)
+            if (stenen[a, b] == null && Insluit(a, b) == true)
             {
                 legaal = true;
             }
+
             //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
 
             //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
@@ -278,63 +278,64 @@ namespace Reversi
         }
 
 
-        public bool insluit(int a, int b)
+        public bool Insluit(int a, int b)
         {
             bool nietaanzet;
             if (beurt % 2 == 0)
                 nietaanzet = false;
             else nietaanzet = true;
 
-            
-            var ding = ingesloot();
-            foreach (int bleh in ding.Item1)
+            var richtingen = Richtingen();
+            foreach (int richtingx in richtingen.Item1)
             {
-                foreach(int blah in ding.Item2) {
-                    int stappengedaan = 1;
-                    int teller = 0;
-                    for (int x = a + bleh * stappengedaan, y = b + blah * stappengedaan; 
-                        x >= 0 && y >= 0 && x < xkolommen && y < yrijen; stappengedaan++, x = a + bleh * stappengedaan, y = b + blah * stappengedaan)
+                foreach(int richtingy in richtingen.Item2)
+                {
+                    int stappengezet = 1;
+                    int teller = 0; //De teller telt hoeveel stenen er van de vijand ingesloten moeten worden.
+                    for (int x = a + richtingx * stappengezet, y = b + richtingy * stappengezet; 
+                         x >= 0 && y >= 0 && x < xkolommen && y < yrijen;
+                         stappengezet++, x = a + richtingx * stappengezet, y = b + richtingy * stappengezet)
                     {
-
-                        Steen huidigesteen = stenen[x, y];
-                        if (huidigesteen == null)
+                        //Stel we willen een steen neerzetten op plek [a,b], dan mogen de omliggende stenen op plekken [x,y] niet leeg zijn.
+                        //Dus als alle omliggendeStenen de waarde null hebben, mag er op [a,b] geen steen geplaatst worden.
+                        Steen omliggendeSteen = stenen[x, y];
+                        if (omliggendeSteen == null)
                             break;
 
-                        if (huidigesteen.green == nietaanzet)
-        {
-                            // steen is van de vijand
+                        //Naast dat er een steen naast plek [a,b] moeten liggen, moet minstens een van de omliggende stenen van de vijandige kleur zijn.
+                        //Oftewel een van de omliggende stenen moet van de kleur zijn die niet aan zet is.
+                        if (omliggendeSteen.green == nietaanzet)
                             teller++;
-                        }
                         else
-            {
-                            
-                            if (teller > 0) return true;
+                        {
+                            if (teller > 0)
+                                return true;
                             else
-                {
                                 break;
-                            }
                         }
                     }
                 }
             }
             return false;
-            }
+        }
 
-        public Tuple<int[], int[]> ingesloot()
+
+        //In Richtingen zijn de mogelijke x- en y-richtingen opgeslagen.
+        public Tuple<int[], int[]> Richtingen()
         {
-            int[] poot = new int[3];
-            int[] pootato = new int[3];
+            int[] richtingX = new int[3];
+            int[] richtingY = new int[3];
 
-            poot[0] = -1;
-            poot[1] = 0;
-            poot[2] = 1;
+            richtingX[0] = -1;
+            richtingX[1] = 0;
+            richtingX[2] = 1;
 
-            pootato[0] = -1;
-            pootato[1] = 0;
-            pootato[2] = 1;
+            richtingY[0] = -1;
+            richtingY[1] = 0;
+            richtingY[2] = 1;
 
-            return new Tuple<int[], int[]>(poot, pootato);
-            }
+            return new Tuple<int[], int[]>(richtingX, richtingY);
+        }
     }
 }
 
