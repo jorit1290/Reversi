@@ -24,6 +24,7 @@ namespace Reversi
         int grootte = 50;
         
         bool legaal = false;
+        bool hulp = false;
 
         int x, y;
 
@@ -48,7 +49,7 @@ namespace Reversi
             this.Paint += Legenda;
             this.velden.MouseClick += Veldenklikker;
             nieuwspel.Click += Spelnieuw;
-            //help.Click += Legaal;
+            help.Click += Helper;
         }
 
         
@@ -156,8 +157,8 @@ namespace Reversi
             {
                 for (int y = 0; y < yrijen; y++)
                 {
-                    if (stenen[x, y] == null && Insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
-                }
+                    if (hulp && stenen[x, y] == null && insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
+        }
             }
         }
 
@@ -283,7 +284,7 @@ namespace Reversi
             foreach (int richtingx in richtingen.Item1)
             {
                 foreach(int richtingy in richtingen.Item2)
-                {
+                    {
                     int stappengezet = 1;
                     int teller = 0; //De teller telt hoeveel stenen er van de vijand ingesloten moeten worden.
                     for (int x = a + richtingx * stappengezet, y = b + richtingy * stappengezet; 
@@ -301,17 +302,17 @@ namespace Reversi
                         if (omliggendeSteen.green == nietaanzet)
                             teller++;
                         else
-                        {
+            {
                             if (teller > 0)
                                 return true;
                             else
                                 break;
+                            }
                         }
                     }
                 }
-            }
             return false;
-        }
+            }
 
 
         //In Richtingen zijn de mogelijke x- en y-richtingen opgeslagen.
@@ -329,6 +330,12 @@ namespace Reversi
             richtingY[2] = 1;
 
             return new Tuple<int[], int[]>(richtingX, richtingY);
+            }
+
+        public void Helper(object o, EventArgs ea)
+        {
+            hulp = !hulp;
+            velden.Invalidate();
         }
     }
 }
