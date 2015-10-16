@@ -11,7 +11,8 @@ namespace Reversi
     {
         static void Main()
         {
-            Application.Run(new Scherm());
+            Scherm s = new Scherm();
+            Application.Run(s);
         }
     }
 
@@ -209,7 +210,7 @@ namespace Reversi
                     stenen[a, b] = new Steen(a, b, false);
                     beurt = beurt + 1;
                 }
-
+                omzet(a, b);
                 legaal = false;
                 velden.Invalidate();
                 zet.Text = Uitkomst();
@@ -340,6 +341,61 @@ namespace Reversi
             hulp = !hulp;
             velden.Invalidate();
         }
+        public void omzet(int a, int b)
+        {
+            bool nietaanzet, aanzet;
+            if (beurt % 2 == 0)
+                nietaanzet = true;
+            else nietaanzet = false;
+
+            aanzet = !nietaanzet;
+
+
+            var ding = ingesloot();
+            foreach (int bleh in ding.Item1)
+            {
+                
+                foreach (int blah in ding.Item2)
+                {
+                    int stappengedaan = 1;
+
+                    int teller = 0;
+                    for (int x = a + bleh * stappengedaan, y = b + blah * stappengedaan;
+                        x >= 0 && y >= 0 && x < xkolommen && y < yrijen; 
+                        stappengedaan++, x = a + bleh * stappengedaan, y = b - blah * stappengedaan)
+                    {
+                        if (blah == 0 && bleh == 0) break;
+                        Steen huidigesteen = stenen[x, y];
+                        if (huidigesteen == null)
+                            break;
+
+                        if (huidigesteen.green == nietaanzet)
+                        {
+                            // steen is van de vijand
+                            teller++;
+                        }
+                        else if (huidigesteen.green == aanzet)
+                        {
+
+                            if (teller > 0)
+                            {
+                                while (teller > 0)
+                                {
+                                    stenen[a + bleh * teller, b + blah * teller].green = aanzet;
+                                    teller--;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        
+                        }
+                    }
+                }
+            }
+        }
     }
+
 }
 
