@@ -23,14 +23,15 @@ namespace Reversi
             this.posX = posX * grootte + 2;
             this.posY = posY * grootte + 2;
 
-            if (green)
-                color = Color.FromArgb(178, 255, 102);
-            else
-                color = Color.FromArgb(153, 255, 255);
+            
         }
 
         public void DrawSteen(object o, PaintEventArgs pea)
         {
+            if (green)
+                color = Color.FromArgb(178, 255, 102);
+            else
+                color = Color.FromArgb(153, 255, 255);
             Brush brush = new SolidBrush(color);
             pea.Graphics.FillEllipse(brush, (float)posX, (float)posY, size, size);
             pea.Graphics.DrawEllipse(Pens.Black,(float)posX, (float)posY, size, size);

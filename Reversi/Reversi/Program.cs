@@ -11,7 +11,8 @@ namespace Reversi
     {
         static void Main()
         {
-            Application.Run(new Scherm());
+            Scherm s = new Scherm();
+            Application.Run(s);
         }
     }
 
@@ -29,7 +30,7 @@ namespace Reversi
         int x, y;
 
         Button nieuwspel, help;
-        Label aantalblauw, aantalgroen, zet;
+        Label aantalblauw, aantalgroen, zet, winnaar;
         PictureBox velden;
         Steen[,] stenen;
 
@@ -53,7 +54,7 @@ namespace Reversi
         }
 
         
-        //De onderstaande methode maakt de GUI
+        //De onderstaande methode maakt de GUI.
         private void SetupGUI()
         {
             this.Text = "Reversi";
@@ -78,7 +79,7 @@ namespace Reversi
             help.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
             this.Controls.Add(help);
 
-            //Labels aantalgroen, aantalblauw en zet
+            //Labels aantalgroen, aantalblauw, zet en winnaar
             aantalgroen = new Label();
             aantalgroen.Size = new Size(80, 30);
             aantalgroen.Location = new Point(85, 85);
@@ -94,11 +95,18 @@ namespace Reversi
             this.Controls.Add(aantalblauw);
 
             zet = new Label();
-            zet.Size = new Size(100, 30);
-            zet.Location = new Point(200, 110);
-            zet.Text = Uitkomst();
+            zet.Size = new Size(160, 30);
+            zet.Location = new Point(170, 85);
+            zet.Text = AanDeBeurt();
             zet.Font = new Font("Ariel", 11);
             this.Controls.Add(zet);
+
+            winnaar = new Label();
+            winnaar.Size = new Size(200, 30);
+            winnaar.Location = new Point(170, 130);
+            winnaar.Text = Winnaar();
+            winnaar.Font = new Font("Ariel", 11);
+            this.Controls.Add(winnaar);
 
             //Picturebox velden
             velden = new PictureBox();
@@ -159,7 +167,7 @@ namespace Reversi
                 for (int y = 0; y < yrijen; y++)
                 {
                     if (hulp && stenen[x, y] == null && Insluit(x, y) == true) pea.Graphics.DrawEllipse(Pens.Black, x * grootte + 2, y * grootte + 2, 46, 46);
-                 }
+        }
             }
         }
 
@@ -192,7 +200,7 @@ namespace Reversi
                 legaal = true;
             }
 
-            //Stap 3: Creeer een nieuwe Steen op de positie indien deze legaal is.
+            //Stap 3: Creeer een nieuwe Steen op de positie indien deze legaal is, en verander omliggende stenen van kleur.
             if (legaal == true)
             {
 
@@ -201,50 +209,67 @@ namespace Reversi
                         stenen[a, b] = new Steen(a, b, true);
                         beurt = beurt + 1;
                     }
-                    else
+
+                else
                     {
                         stenen[a, b] = new Steen(a, b, false);
                         beurt = beurt + 1;
                     }
 
-             legaal = false;
-             velden.Invalidate();
-             zet.Text = Uitkomst();
-             aantalgroen.Text = Aantalgroen() + " stenen";
-             aantalblauw.Text = Aantalblauw() + " stenen";
+                Omzet(a, b);
+                legaal = false;
+                velden.Invalidate();
+                zet.Text = AanDeBeurt();
+                winnaar.Text = Winnaar();
+                aantalgroen.Text = Aantalgroen() + " stenen";
+                aantalblauw.Text = Aantalblauw() + " stenen";
             }    
-
-            //Stap 4: Verander omliggende stenen van kleur.
-        
         }
 
-        //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
-        //Hij zorgt ervoor dat je weer het beginscherm krijgt en opnieuw kunt beginnen.
+
+        //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt. Hij zorgt dat je het beginscherm krijgt en opnieuw kunt beginnen.
         private void Spelnieuw(object o, EventArgs ea)
         {
             beurt = 0;
             Array.Clear(stenen, 0, stenen.Length);
             BeginStand();
-            zet.Text = Uitkomst();
+            zet.Text = AanDeBeurt();
             velden.Invalidate();
             
         }
 
 
-        //De methode Uitkomst bepaald welke tekst het label zet laat zien.
-        private string Uitkomst()
+        //De methode AanDeBeurt bepaald welke tekst het label zet laat zien.
+        private string AanDeBeurt()
         {
             if (beurt % 2 == 0)
                 return "groen aan zet";
-            else if (beurt % 2 == 1)
-                return "blauw aan zet";
-            // else if (geen zetten meer mogelijk && Aantalgroen>Aantalblauw)
-            //   return "groen heeft gewonnen!";
-            // else if (geen zetten meer mogelijk && Aantalblauw>Aantalgroen)
-             //   return "blauw heeft gewonen!";
             else
-                return "Gelijkspel";
+                return "blauw aan zet";
         }
+
+
+        //Deze methode bepaalt de uitkomst van het spel.
+        public string Winnaar()
+        {
+            for (int i = 0; i < xkolommen; i++)
+            {
+                for (int j = 0; j < yrijen; j++)
+                {
+                    if (stenen[i, j] != null)
+                    {
+                        if (int.Parse(Aantalblauw()) > int.Parse(Aantalgroen()))
+                            return "Blauw staat voor";
+                        if (int.Parse(Aantalgroen()) > int.Parse(Aantalblauw()))
+                            return "Groen staat voor";
+                        if (int.Parse(Aantalgroen()) == int.Parse(Aantalblauw()))
+                            return "Gelijkspel";
+                    }
+                }
+            }
+            return "";
+        }
+
 
         //Aantalgroen bepaalt hoeveel groene stenen er op het bord staan.
         private string Aantalgroen()
@@ -274,6 +299,7 @@ namespace Reversi
         }
 
 
+        //Deze onderstaande methode checkt of er omliggende stenen zijn van de vijandige kleur.
         public bool Insluit(int a, int b)
         {
             bool nietaanzet;
@@ -303,17 +329,17 @@ namespace Reversi
                         if (omliggendeSteen.green == nietaanzet)
                             teller++;
                         else
-            {
+                        {
                             if (teller > 0)
                                 return true;
                             else
                                 break;
-                            }
                         }
                     }
                 }
-            return false;
             }
+            return false;
+        }
 
 
         //In Richtingen zijn de mogelijke x- en y-richtingen opgeslagen.
@@ -331,7 +357,7 @@ namespace Reversi
             richtingY[2] = 1;
 
             return new Tuple<int[], int[]>(richtingX, richtingY);
-        }
+            }
 
 
         //Deze methode verandert de waarde van hulp, zodat de helpfunctie in veldentekener juist wel of juist niet gaat werken.
@@ -340,6 +366,58 @@ namespace Reversi
             hulp = !hulp;
             velden.Invalidate();
         }
+
+
+        //Omzet verandert de stenen indien nodig van kleur.
+        public void Omzet(int a, int b)
+        {
+            bool nietaanzet, aanzet;
+            if (beurt % 2 == 0)
+                nietaanzet = true;
+            else nietaanzet = false;
+
+            aanzet = !nietaanzet;
+
+            var richtingen = Richtingen();
+            foreach (int richtingx in richtingen.Item1)
+            {                
+                foreach (int richtingy in richtingen.Item2)
+                {
+                    int stappengezet = 1;
+                    int teller = 0; //De teller telt hoeveel stenen er van de vijand ingesloten moeten worden.
+                    for (int x = a + richtingx * stappengezet, y = b + richtingy * stappengezet;
+                         x >= 0 && y >= 0 && x < xkolommen && y < yrijen; 
+                         stappengezet++, x = a + richtingx * stappengezet, y = b - richtingy * stappengezet)
+                    {
+                        if (richtingy == 0 && richtingx == 0)
+                            break;
+
+                        Steen omliggendeSteen = stenen[x, y];
+
+                        if (omliggendeSteen == null)
+                            break;
+
+                        if (omliggendeSteen.green == nietaanzet)
+                            teller++;
+
+                        else if (omliggendeSteen.green == aanzet)
+                        {
+                            if (teller > 0)
+                            {
+                                while (teller > 0)
+                                {
+                                    stenen[a + richtingx * teller, b + richtingy * teller].green = aanzet;
+                                    teller--;
+                                }
+                            }
+                        }
+                        else
+                            break;
+                    }
+                }
+            }
+        }
     }
+
 }
 
