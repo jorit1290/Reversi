@@ -162,8 +162,8 @@ namespace Reversi
         }
 
 
-        // Als er op de Picturebox geklikt wordt, wordt Veldenklikker aangeroepen. Deze methode kijkt of het legaal
-        // is om op de desbetreffende plek een steen te plaatsen. Zo ja, dan wordt er een steen getekend.
+        //Als er op de Picturebox geklikt wordt, wordt Veldenklikker aangeroepen. Deze methode kijkt of het legaal is om op de desbetreffende
+        //plek een steen te plaatsen. Zo ja, dan wordt er een steen getekend en veranderen de vijandige stenen die worden ingesloten van kleur.
         private void Veldenklikker(object o, MouseEventArgs mea)
         {
             int locatieMuisX = mea.X;
@@ -184,19 +184,13 @@ namespace Reversi
                 b = positieY - 1;
             }
        
-            //Stap 2: Ligt er al een steen op de desbetreffende positie?
+            //Stap 2: Is de desbetreffende positie legaal? Oftewel er mag nog geen steen liggen en er moet minstens een vijandige steen worden ingesloten.
             if (stenen[a, b] == null && Insluit(a, b) == true)
             {
                 legaal = true;
             }
 
-            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
-
-            //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
-
-
-
-            //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
+            //Stap 3: Creeer een nieuwe Steen op de positie indien deze legaal is.
             if (legaal == true)
             {
 
@@ -218,7 +212,7 @@ namespace Reversi
              aantalblauw.Text = Aantalblauw() + " stenen";
             }    
 
-                //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
+            //Stap 4: Verander omliggende stenen van kleur, als dat nodig is.
         
         }
 
