@@ -12,12 +12,14 @@ namespace Reversi
     {
         Color color;
 
+        public bool green;
         double posX, posY, xPos, yPos;
         int size = 46;
         int grootte = 50;
 
         public Steen(double posX, double posY, bool green)
         {
+            this.green = green;
             this.posX = posX * grootte + 2;
             this.posY = posY * grootte + 2;
 

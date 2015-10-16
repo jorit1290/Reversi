@@ -38,6 +38,7 @@ namespace Reversi
 
             stenen = new Steen[xkolommen, yrijen];
 
+            BeginStand();
             SetupGUI();
             
             this.velden.Paint += Veldentekener;
@@ -75,16 +76,16 @@ namespace Reversi
 
             //Labels aantalgroen, aantalblauw en zet
             aantalgroen = new Label();
-            aantalgroen.Size = new Size(70, 30);
+            aantalgroen.Size = new Size(80, 30);
             aantalgroen.Location = new Point(85, 85);
-            aantalgroen.Text = Aantalgroen();
+            aantalgroen.Text = Aantalgroen() + " stenen";
             aantalgroen.Font = new Font("Arial", 11);
             this.Controls.Add(aantalgroen);
 
             aantalblauw = new Label();
-            aantalblauw.Size = new Size(70, 30);
+            aantalblauw.Size = new Size(80, 30);
             aantalblauw.Location = new Point(85, 130);
-            aantalblauw.Text = Aantalblauw();
+            aantalblauw.Text = Aantalblauw() + " stenen";
             aantalblauw.Font = new Font("Arial", 11);
             this.Controls.Add(aantalblauw);
 
@@ -101,9 +102,6 @@ namespace Reversi
             velden.Size = new Size(x + 1, y + 1);
             velden.BackColor = System.Drawing.Color.White;
             this.Controls.Add(velden);
-
-
-            BeginStand();
         }
 
 
@@ -175,7 +173,7 @@ namespace Reversi
             }
        
             //Stap 2: Ligt er al een steen op de desbetreffende positie?
-            if (stenen[a, b] == stenen[0, 0])
+            if (stenen[a, b] == null)
             {
                 legaal = true;
             }
@@ -201,8 +199,8 @@ namespace Reversi
                 legaal = false;
                 velden.Invalidate();
                 zet.Text = Uitkomst();
-                aantalgroen.Text = Aantalgroen();
-                aantalblauw.Text = Aantalblauw();
+                aantalgroen.Text = Aantalgroen() + " stenen";
+                aantalblauw.Text = Aantalblauw() + " stenen";
             }
 
             //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
@@ -239,27 +237,28 @@ namespace Reversi
         //Aantalgroenbepaalt hoeveel groene stenen er op het bord staan.
         private string Aantalgroen()
         {
-            if (beurt == 0)
-                return "2 stenen";
-
-            else
+            int aantalgr = 0;
+            foreach (Steen s in stenen)
             {
-                int aantal = (beurt + 1) / 2 + 2;
-                return aantal + " stenen";
+                if (s == null) continue;
+                if (s.green == true)
+                    aantalgr++;
             }
+            return aantalgr.ToString();
         }
 
 
         //Aantalblauw bepaalt hoeveel blauwe stenen er op het bord staan.
         private string Aantalblauw()
         {
-            if (beurt == 0)
-                return "2 stenen";
-            else
+            int aantalbl = 0;
+            foreach (Steen s in stenen)
             {
-                int aantal = beurt / 2 + 2;
-                return aantal + " stenen";
+                if (s == null) continue;
+                if (s.green == false)
+                    aantalbl++;
             }
+            return aantalbl.ToString();
         }
 
 
