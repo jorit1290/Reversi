@@ -174,14 +174,10 @@ namespace Reversi
             }
        
             //Stap 2: Ligt er al een steen op de desbetreffende positie?
-            if (stenen[a, b] == null)
-            {
-                legaal = true;
-            }
 
             //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
 
-            if(stenen[a,b] == stenen[0,0])
+            if(stenen[a,b] == null)
             {
                 legaal = true;
             }
@@ -190,9 +186,8 @@ namespace Reversi
             //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
             if (legaal == true)
             {
+
                 if (beurt % 2 == 0)
-                {
-                    if (beurt % 2 == 0)
                     {
                         stenen[a, b] = new Steen(a, b, true);
                         beurt = beurt + 1;
@@ -203,12 +198,12 @@ namespace Reversi
                         beurt = beurt + 1;
                     }
 
-                    legaal = false;
-                    velden.Invalidate();
-                    zet.Text = Uitkomst();
-                    aantalgroen.Text = Aantalgroen() + " stenen";
-                    aantalblauw.Text = Aantalblauw() + " stenen";
-                }
+             legaal = false;
+             velden.Invalidate();
+             zet.Text = Uitkomst();
+             aantalgroen.Text = Aantalgroen() + " stenen";
+             aantalblauw.Text = Aantalblauw() + " stenen";
+                
 
                 //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
             }
