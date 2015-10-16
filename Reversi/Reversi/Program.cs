@@ -22,8 +22,9 @@ namespace Reversi
         int yrijen = 6;
         int beurt = 0;
         int grootte = 50;
-        int x, y;
         
+        int x, y;
+
         Button nieuwspel, help;
         Label aantalblauw, aantalgroen, zet;
         PictureBox velden;
@@ -157,7 +158,7 @@ namespace Reversi
             int locatieMuisY = mea.Y;
             int a = 0, b = 0;
             bool legaal = false;
-
+            
             Point locatieSteen = new Point(a, b);
 
             //Stap 1: Transleer de muispositie naar de positie in de array stenen.
@@ -179,26 +180,32 @@ namespace Reversi
             }
 
             //Stap 3: Worden er wel stenen ingesloten door een steen te plaatsen op de desbetreffende positie?
-            
+
+            if(stenen[a,b] == stenen[0,0])
+            {
+                legaal = true;
+            }
 
 
             //Stap 4: Creeer een nieuwe Steen op de positie indien deze legaal is.
             if (legaal == true)
             {
                 if (beurt % 2 == 0)
+            {
+                if (beurt % 2 == 0)
                 {
-                    stenen[a, b] = new Steen(a, b, true);
-                    beurt = beurt + 1;
-                }
-                else
-                {
-                    stenen[a, b] = new Steen(a, b, false);
-                    beurt = beurt + 1;
-                }
-                
+                stenen[a, b] = new Steen(a, b, true);
+                beurt = beurt + 1;
+            }
+            else
+            {
+                stenen[a, b] = new Steen(a, b, false);
+                beurt = beurt + 1;
+            }
+
                 legaal = false;
                 velden.Invalidate();
-                zet.Text = Uitkomst();
+            zet.Text = Uitkomst();
                 aantalgroen.Text = Aantalgroen() + " stenen";
                 aantalblauw.Text = Aantalblauw() + " stenen";
             }
@@ -216,8 +223,9 @@ namespace Reversi
             BeginStand();
             zet.Text = Uitkomst();
             velden.Invalidate();
+            
         }
-        
+
 
         //De methode Uitkomst bepaald welke tekst het label zet laat zien.
         private string Uitkomst()
@@ -229,7 +237,7 @@ namespace Reversi
             // else if (geen zetten meer mogelijk && Aantalgroen>Aantalblauw)
             //   return "groen heeft gewonnen!";
             // else if (geen zetten meer mogelijk && Aantalblauw>Aantalgroen)
-            //   return "blauw heeft gewonen!";
+             //   return "blauw heeft gewonen!";
             else
                 return "Gelijkspel";
         }
@@ -272,7 +280,7 @@ namespace Reversi
                     double xPos = 2;
                     double yPos = 2; 
                     Steen.LegeSteen(xPos, yPos);
-                }
+            }
             }
         } */
     }
