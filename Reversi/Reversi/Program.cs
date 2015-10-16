@@ -191,27 +191,27 @@ namespace Reversi
             if (legaal == true)
             {
                 if (beurt % 2 == 0)
-            {
-                if (beurt % 2 == 0)
                 {
-                stenen[a, b] = new Steen(a, b, true);
-                beurt = beurt + 1;
-            }
-            else
-            {
-                stenen[a, b] = new Steen(a, b, false);
-                beurt = beurt + 1;
-            }
+                    if (beurt % 2 == 0)
+                    {
+                        stenen[a, b] = new Steen(a, b, true);
+                        beurt = beurt + 1;
+                    }
+                    else
+                    {
+                        stenen[a, b] = new Steen(a, b, false);
+                        beurt = beurt + 1;
+                    }
 
-                legaal = false;
-                velden.Invalidate();
-            zet.Text = Uitkomst();
-                aantalgroen.Text = Aantalgroen() + " stenen";
-                aantalblauw.Text = Aantalblauw() + " stenen";
+                    legaal = false;
+                    velden.Invalidate();
+                    zet.Text = Uitkomst();
+                    aantalgroen.Text = Aantalgroen() + " stenen";
+                    aantalblauw.Text = Aantalblauw() + " stenen";
+                }
+
+                //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
             }
-
-            //Stap 5: Verander omliggende stenen van kleur, als dat nodig is.
-
         }
 
         //Deze methode wordt aangeroepen zodra er op de nieuwspelbutton geklikt wordt.
